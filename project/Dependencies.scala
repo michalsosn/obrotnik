@@ -4,6 +4,7 @@ object Dependencies {
   object Version {
     val akka = "2.4.6"
     val logback = "1.1.7"
+    val scalaXml = "1.0.3"
     val slick = "3.1.1"
 
     val scalaTest = "2.2.6"
@@ -28,15 +29,17 @@ object Dependencies {
 
     val logbackClassic = "ch.qos.logback" % "logback-classic" % Version.logback
 
+    val scalaXml = "org.scala-lang.modules" %% "scala-xml" % Version.scalaXml
+
     val slick = "com.typesafe.slick" %% "slick" % Version.slick
   }
 
   object Test {
     private val akkaGroup = "com.typesafe.akka"
 
-    val akkaHttpTestkit = akkaGroup %% "akka-http-testkit" % Version.akka % "test"
-    val akkaStreamTestkit = akkaGroup %% "akka-stream-testkit" % Version.akka % "test"
-    val akkaTestKit = akkaGroup %% "akka-testkit" % Version.akka % "test"
+    val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % Version.akka % "test"
+    val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit" % Version.akka % "test"
+    val akkaTestKit = "com.typesafe.akka" %% "akka-testkit" % Version.akka % "test"
     val scalaTest = "org.scalatest" %% "scalatest"  % Version.scalaTest % "test"
   }
 
@@ -44,5 +47,5 @@ object Dependencies {
   private val testing = Seq(Test.akkaTestKit, Test.scalaTest)
   private val logging = Seq(akkaSlf4j, logbackClassic)
 
-  val all = Seq(akkaActor, akkaHttp, akkaHttpSprayJson, akkaStream) ++ testing ++ logging
+  val all = Seq(akkaActor, akkaHttp, akkaHttpXml, akkaStream, scalaXml) ++ testing ++ logging
 }
