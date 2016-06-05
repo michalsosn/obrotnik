@@ -1,10 +1,22 @@
-lazy val root = (project in file(".")).
+name := "obrotnik"
+version := "0.0.1"
+
+lazy val commonSettings = Seq(
+  scalaVersion := "2.11.8"
+)
+
+lazy val macros = (project in file("macros")).
+  settings(commonSettings: _*).
   settings(
-    name := "obrotnik",
-    version := "0.0.1",
-    scalaVersion := "2.11.8",
-    libraryDependencies ++= Dependencies.all
+    libraryDependencies ++= Dependencies.macros
   )
+
+lazy val core = (project in file("core")).
+  settings(commonSettings: _*).
+  settings(
+    libraryDependencies ++= Dependencies.core
+  ).
+  dependsOn(macros)
 
 lazy val testScalastyle = taskKey[Unit]("testScalastyle")
 testScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Compile).toTask("").value
