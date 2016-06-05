@@ -4,7 +4,8 @@ object Dependencies {
   object Version {
     val akka = "2.4.6"
     val logback = "1.1.7"
-    val scalaXml = "1.0.3"
+    val scalaReflect = "2.11.8"
+    val scalaXml = "1.0.5"
     val slick = "3.1.1"
 
     val scalaTest = "2.2.6"
@@ -30,6 +31,7 @@ object Dependencies {
     val logbackClassic = "ch.qos.logback" % "logback-classic" % Version.logback
 
     val scalaXml = "org.scala-lang.modules" %% "scala-xml" % Version.scalaXml
+    val scalaReflect = "org.scala-lang" % "scala-reflect" % Version.scalaReflect
 
     val slick = "com.typesafe.slick" %% "slick" % Version.slick
   }
@@ -47,5 +49,6 @@ object Dependencies {
   private val testing = Seq(Test.akkaTestKit, Test.scalaTest)
   private val logging = Seq(akkaSlf4j, logbackClassic)
 
-  val all = Seq(akkaActor, akkaHttp, akkaHttpXml, akkaStream, scalaXml) ++ testing ++ logging
+  val core = Seq(akkaActor, akkaHttp, akkaHttpXml, akkaStream, scalaXml) ++ testing ++ logging
+  val macros = Seq(scalaReflect, scalaXml)
 }

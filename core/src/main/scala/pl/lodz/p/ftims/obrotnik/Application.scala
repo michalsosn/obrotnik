@@ -5,10 +5,12 @@ import akka.actor.ActorSystem
 import akka.event.Logging
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import akka.stream.ThrottleMode.Shaping
 import akka.stream.scaladsl.{Flow, Source}
-import pl.lodz.p.ftims.obrotnik.feed.{AtomSupport, RssSupport}
+import pl.lodz.p.ftims.obrotnik.feed.atom.{AtomSupport, Feed}
+import pl.lodz.p.ftims.obrotnik.feed.rss.{Rss, RssSupport}
 import scala.concurrent.duration._
 import scala.io.StdIn
 
@@ -32,15 +34,13 @@ object Application extends RssSupport with AtomSupport {
 
     requestRepeatedly("news.ycombinator.com", "/rss")
       .via(oncePer(5.seconds))
-      .map(_.entity)
-      .mapAsync(1)(rssChannelUnmarshaller(_))
+      .mapAsync(1)(Unmarshal(_).to[Rss])
       .recover { case ex => <keks>{ex}</keks> }
       .runForeach(result => log.info(result.toString))
 
     requestRepeatedly("www.reddit.com", "/.rss")
       .via(oncePer(5.seconds))
-      .map(_.entity)
-      .mapAsync(1)(atomFeedUnmarshaller(_))
+      .mapAsync(1)(Unmarshal(_).to[Feed])
       .recover { case ex => <keks>{ex}</keks> }
       .runForeach(result => log.info(result.toString))
 
