@@ -20,7 +20,7 @@ trait RssSupport extends XmlConverterSupport {
     xmlConverterUnmarshaller[Rss](rssContentTypeRange)
 }
 
-object RssSupport extends RssSupport {
+object RssSupport {
   val rssMediaType: MediaType.NonBinary = `application/rss+xml`
   val rssContentTypeRange: ContentTypeRange = ContentTypeRange(rssMediaType)
 }

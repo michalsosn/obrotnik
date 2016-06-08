@@ -7,10 +7,10 @@ import java.time.ZonedDateTime
  * An atom feed.
  */
 case class Feed(
-  id: String,
+  id: URI,
   title: String,
   updated: ZonedDateTime,
-  link: Option[String] = None,
+//  link: Option[String] = None,
   generator: Option[String] = None,
   icon: Option[URI] = None,
   logo: Option[URI] = None,

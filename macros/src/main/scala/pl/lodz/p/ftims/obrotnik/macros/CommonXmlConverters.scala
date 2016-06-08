@@ -30,10 +30,10 @@ trait CommonXmlConverters {
     new SimpleXmlConverter[ZonedDateTime] {
       import DateTimeFormatter._
 
-      def toXml(dateTime: ZonedDateTime): Node = Text(dateTime.toString)
+      def toXml(dateTime: ZonedDateTime): Node = Text(dateTime.format(RFC_1123_DATE_TIME))
 
       def fromXml(nodes: NodeSeq): ZonedDateTime =
-        tryFormats(nodes.text, ISO_ZONED_DATE_TIME, RFC_1123_DATE_TIME)
+        tryFormats(nodes.text, RFC_1123_DATE_TIME, ISO_ZONED_DATE_TIME)
 
       private def tryFormats(text: String, formatters: DateTimeFormatter*): ZonedDateTime =
         try {

@@ -20,7 +20,7 @@ trait AtomSupport extends XmlConverterSupport {
     xmlConverterUnmarshaller[Feed](atomContentTypeRange)
 }
 
-object AtomSupport extends AtomSupport {
+object AtomSupport {
   val atomMediaType: MediaType.NonBinary = `application/atom+xml`
   val atomContentTypeRange: ContentTypeRange = ContentTypeRange(atomMediaType)
 }

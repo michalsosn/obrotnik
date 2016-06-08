@@ -145,15 +145,15 @@ This file is divided into 3 sections:
     scala.collection.JavaConverters._ and use .asScala / .asJava methods</customMessage>
   </check>
 
-  <check level="error" class="org.scalastyle.scalariform.ImportOrderChecker" enabled="true">
-    <parameters>
-      <parameter name="groups">java,scala,3rdParty,spark</parameter>
-      <parameter name="group.java">javax?\..*</parameter>
-      <parameter name="group.scala">scala\..*</parameter>
-      <parameter name="group.3rdParty">(?!org\.apache\.spark\.).*</parameter>
-      <parameter name="group.spark">org\.apache\.spark\..*</parameter>
-    </parameters>
-  </check>
+  <!--<check level="error" class="org.scalastyle.scalariform.ImportOrderChecker" enabled="true">-->
+    <!--<parameters>-->
+      <!--<parameter name="groups">java,scala,3rdParty,spark</parameter>-->
+      <!--<parameter name="group.java">javax?\..*</parameter>-->
+      <!--<parameter name="group.scala">scala\..*</parameter>-->
+      <!--<parameter name="group.3rdParty">(?!org\.apache\.spark\.).*</parameter>-->
+      <!--<parameter name="group.spark">org\.apache\.spark\..*</parameter>-->
+    <!--</parameters>-->
+  <!--</check>-->
 
   <check level="error" class="org.scalastyle.scalariform.DisallowSpaceBeforeTokenChecker" enabled="true">
     <parameters>
