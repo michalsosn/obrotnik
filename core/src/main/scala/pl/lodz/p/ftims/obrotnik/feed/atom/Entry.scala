@@ -10,10 +10,10 @@ case class Entry(
   title: String,
   updated: ZonedDateTime,
   content: Option[String] = None,
-  summary: Option[String] = None
-//  published: Option[ZonedDateTime] = None,
-//  rights: Option[String] = None,
+  summary: Option[String] = None,
+  published: Option[ZonedDateTime] = None,
+  rights: Option[String] = None,
 //  source: Option[Feed] = None,
-//  author: Seq[Person] = Seq.empty,
-//  contributor: Seq[Person] = Seq.empty
+  author: Seq[Person] = Seq.empty,
+  contributor: Seq[Person] = Seq.empty
 )
