@@ -6,7 +6,7 @@ import akka.event.{Logging, LoggingAdapter}
 import pl.lodz.p.ftims.obrotnik.feed.rss._
 import pl.lodz.p.ftims.obrotnik.mapping.DatabaseSupportModuleImpl
 import pl.lodz.p.ftims.obrotnik.mapping.ExtendedPostgresDriver.api._
-import pl.lodz.p.ftims.obrotnik.stream.{FeedUpdateModuleImpl, HttpStreamModuleImpl, Sources}
+import pl.lodz.p.ftims.obrotnik.stream._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.io.StdIn
@@ -16,10 +16,11 @@ import scala.io.StdIn
  */
 object Application extends SimpleApplication
   with DatabaseSupportModuleImpl
-  with FeedUpdateModuleImpl
-  with HttpStreamModuleImpl
+  with SlickRepositories
+  with AkkaFeedUpdateModule
+  with AkkaHttpStreamModule
   with RssSupport {
-  private val log: LoggingAdapter = Logging.getLogger(system, this)
+  private val log: LoggingAdapter = Logging.getLogger(actorSystem, this)
 
   def main(args: Array[String]) {
     try {
@@ -32,12 +33,12 @@ object Application extends SimpleApplication
           Sources += stream.Source(new URI("https://nofluffjobs.com/rss"), active = true)
         )), 10.seconds
       )
-      Await.result(feedUpdate.updateAllFeeds, 10.seconds)
+      Await.result(feedUpdate.updateAllFeeds(), 10.seconds)
       log.info("Press RETURN to stop...")
       StdIn.readLine()
     } finally {
       database.close()
-      system.terminate()
+      actorSystem.terminate()
     }
   }
 }

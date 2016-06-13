@@ -12,9 +12,6 @@ case class Source(
   id: Option[Id] = None
 )
 
-/**
- * A functional mapping of feed sources.
- */
 class SourceMapping(tag: Tag) extends Table[Source](tag, "source") with ColumnTypes {
   def id: Rep[Id] = column[Id]("source_id", O.PrimaryKey, O.AutoInc)
   def uri: Rep[URI] = column[URI]("uri")
