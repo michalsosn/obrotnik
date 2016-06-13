@@ -4,9 +4,6 @@ import pl.lodz.p.ftims.obrotnik.mapping.{ColumnTypes, Id}
 import pl.lodz.p.ftims.obrotnik.mapping.ExtendedPostgresDriver.api._
 import slick.lifted.{Index, ProvenShape}
 
-/**
- *
- */
 case class Sink(
   name: String,
   active: Boolean,

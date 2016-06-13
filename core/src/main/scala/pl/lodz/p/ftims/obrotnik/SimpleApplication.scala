@@ -8,21 +8,21 @@ import pl.lodz.p.ftims.obrotnik.mapping.ExtendedPostgresDriver.api._
 import pl.lodz.p.ftims.obrotnik.stream.AkkaModule
 
 /**
- *
+ * Instantiates Akka and Database dependencies.
  */
 trait SimpleApplication extends AkkaModule with DatabaseModule {
 
-  implicit val system = ActorSystem("obrotnik-system")
-  implicit val executionContext = system.dispatcher
+  override implicit val actorSystem = ActorSystem("obrotnik-system")
+  override implicit val executionContext = actorSystem.dispatcher
 
-  private val log: LoggingAdapter = Logging.getLogger(system, this)
+  private val log: LoggingAdapter = Logging.getLogger(actorSystem, this)
   val loggingDecider: Supervision.Decider = { ex =>
     log.error("Unhandled exception in stream: {}", ex)
     Supervision.Stop
   }
-  implicit val materializer: ActorMaterializer = ActorMaterializer(
-    ActorMaterializerSettings(system).withSupervisionStrategy(loggingDecider)
+  override implicit val materializer: ActorMaterializer = ActorMaterializer(
+    ActorMaterializerSettings(actorSystem).withSupervisionStrategy(loggingDecider)
   )
 
-  implicit val database: Database = Database.forName("obrotnikdb")
+  override implicit val database: Database = Database.forName("obrotnikdb")
 }

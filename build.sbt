@@ -10,15 +10,24 @@ lazy val commonSettings = Seq(
   (test in Test) <<= (test in Test) dependsOn testScalastyle
 )
 
-lazy val macros = (project in file("macros")).
-  settings(commonSettings: _*).
-  settings(
+lazy val macros = (project in file("macros"))
+  .settings(commonSettings: _*)
+  .settings(
     libraryDependencies ++= Dependencies.macros
   )
 
-lazy val core = (project in file("core")).
-  settings(commonSettings: _*).
-  settings(
+lazy val core = (project in file("core"))
+  .settings(commonSettings: _*)
+  .settings(
     libraryDependencies ++= Dependencies.core
-  ).
-  dependsOn(macros)
+  )
+  .dependsOn(macros)
+
+lazy val play = (project in file("play"))
+  .settings(commonSettings: _*)
+  .settings(
+    libraryDependencies ++= Dependencies.play
+  )
+  .enablePlugins(PlayScala)
+  .dependsOn(core)
+

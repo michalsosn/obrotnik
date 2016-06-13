@@ -1,4 +1,5 @@
 import sbt._
+import play.sbt.PlayImport._
 
 object Dependencies {
   object Version {
@@ -60,4 +61,5 @@ object Dependencies {
   val core = Seq(akkaActor, akkaHttp, akkaHttpXml, akkaStream, scalaXml) ++
              database ++ testing ++ logging
   val macros = Seq(scalaReflect, scalaXml)
+  val play = Seq(jdbc, cache) ++ database ++ logging
 }
