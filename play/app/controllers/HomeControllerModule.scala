@@ -7,5 +7,5 @@ trait HomeControllerModule {
 }
 
 trait HomeController extends Controller {
-  def index: Action[AnyContent]
+  def index(): Action[AnyContent]
 }

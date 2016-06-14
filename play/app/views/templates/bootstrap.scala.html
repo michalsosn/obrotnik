@@ -1,0 +1,32 @@
+@(title: String, styles: Array[String] = Array(), scripts: Array[String] = Array())(navbar: Html)(content: Html)
+
+@import routes.Assets
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>@title - Obrotnik</title>
+
+        <link rel="shortcut icon" type="image/png" href="@Assets.versioned("images/favicon.png")">
+        <link href="@Assets.versioned("lib/bootstrap/css/bootstrap.css")" rel="stylesheet">
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        @for(style <- styles) {
+            <link href="@style" rel="stylesheet">
+        }
+    </head>
+    <body>
+        <header>
+        @navbar
+        </header>
+        <main>
+        @content
+        </main>
+        <script src="@Assets.versioned("lib/bootstrap/js/bootstrap.js")"></script>
+        @for(script <- scripts) {
+            <script src="@script"></script>
+        }
+    </body>
+</html>

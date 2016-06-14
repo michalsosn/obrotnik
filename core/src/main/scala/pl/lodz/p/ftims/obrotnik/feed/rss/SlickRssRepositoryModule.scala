@@ -5,8 +5,8 @@ import pl.lodz.p.ftims.obrotnik.mapping.{DatabaseModule, Id}
 import pl.lodz.p.ftims.obrotnik.stream.AkkaModule
 import scala.concurrent.Future
 
-trait SlickRssRepositoryModule extends RssRepositoryModule
-  with AkkaModule with DatabaseModule {
+trait SlickRssRepositoryModule extends RssRepositoryModule {
+  this: AkkaModule with DatabaseModule =>
   lazy val rssRepository: RssRepository = new SlickRssRepository
 
   class SlickRssRepository extends RssRepository {

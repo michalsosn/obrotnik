@@ -1,0 +1,78 @@
+@import pl.lodz.p.ftims.obrotnik.stream.Sink
+@import views.templates.MenuItems
+
+@import helper._
+@import views.templates.BootstrapHelpers._
+
+@(sinks: Seq[Sink], sinkForm: Form[Sink])(implicit messages: Messages)
+
+@templates.bootstrap("OUTPUT feeds")(templates.defaultNav(Some(MenuItems.SINK_LIST))) {
+    <div class="container">
+        <article class="panel panel-default">
+            <header class="panel-heading panel-title">
+                Input feeds
+            </header>
+
+            <section class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1 col-xs-1">#</th>
+                            <th class="col-md-7 col-xs-5">Name</th>
+                            <th class="col-md-2 col-xs-3">Active</th>
+                            <th class="col-md-2 col-xs-3">Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for((source, index) <- sinks.zipWithIndex) {
+                        <tr>
+                            <td>@(index + 1)</td>
+                            <td>
+                                @*<a href="@source.name">@source.name</a>*@
+                                @source.name
+                            </td>
+                            <td>
+                            @if(source.active) {
+                                @form(action = routes.SinkController.toggleActive(source.id.get.value, active = false)) {
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fa fa-play"></i> Active
+                                    </button>
+                                }
+                            } else {
+                                @form(action = routes.SinkController.toggleActive(source.id.get.value, active = true)) {
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-stop"></i> Inactive
+                                    </button>
+                                }
+                            }
+                            </td>
+                            <td>
+                            @form(action = routes.SinkController.remove(source.id.get.value)) {
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash-o"></i> Remove
+                                </button>
+                            }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </section>
+            <section class="panel-body">
+            @form(action = routes.SinkController.add(), 'class -> "form-inline") {
+                <div class="form-group">
+                @inputText(sinkForm("name"), 'class -> "form-control", '_label -> "Name")
+                </div>
+                <div class="checkbox">
+                    <label>
+                    @checkbox(sinkForm("active"), 'class -> "form-control", '_label -> "Active")
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Add
+                </button>
+            }
+            </section>
+        </article>
+    </div>
+}

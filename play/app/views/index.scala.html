@@ -1,16 +1,12 @@
-@(message: String)
+@import views.templates.MenuItems
 
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
-@main("Welcome to Play") {
-
-    @*
-     * Get an `Html` object by calling the built-in Play welcome
-     * template and passing a `String` message.
-     *@
-    @play20.welcome(message, style = "Scala")
-
+@templates.bootstrap("Home")(templates.defaultNav(Some(MenuItems.INDEX))) {
+    <div class="container">
+        <article class="jumbotron">
+            <h1>Welcome</h1>
+            <p class="lead">
+                Lorem ipsum pro dolorem.
+            </p>
+        </article>
+    </div>
 }
