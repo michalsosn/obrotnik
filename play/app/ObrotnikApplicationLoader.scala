@@ -1,4 +1,5 @@
 import controllers.Assets
+import controllers.HomeControllerModule
 import controllers.HomeControllerModuleImpl
 import pl.lodz.p.ftims.obrotnik.SlickRepositories
 import play.api.ApplicationLoader.Context
@@ -13,9 +14,11 @@ class ObrotnikApplicationLoader extends ApplicationLoader {
 }
 
 class ObrotnikApplicationModule(context: Context) extends PlayAkkaModule(context)
-  with SlickRepositories with HomeControllerModuleImpl {
+  with SlickRepositories with PlayControllers {
 
   lazy val assets = new Assets(httpErrorHandler)
-  lazy val router = new Routes(httpErrorHandler, homeController, assets)
+  lazy val router = new Routes(
+    httpErrorHandler, homeController, sourceController, sinkController, assets
+  )
 }
 

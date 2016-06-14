@@ -10,6 +10,7 @@ object Dependencies {
     val scalaXml = "1.0.5"
     val slick = "3.1.1"
     val slickPg = "0.14.1"
+    val webjarBootstrap = "3.3.4"
 
     val scalaTest = "2.2.6"
   }
@@ -42,6 +43,8 @@ object Dependencies {
     val slickHikariCp = "com.typesafe.slick" %% "slick-hikaricp" % Version.slick
     val slickPg = "com.github.tminglei" %% "slick-pg" % Version.slickPg
     val slickPgDate = "com.github.tminglei" %% "slick-pg_date2" % Version.slickPg
+
+    val webjarBootstrap = "org.webjars" % "bootstrap" % Version.webjarBootstrap
   }
 
   object Test {
@@ -61,5 +64,5 @@ object Dependencies {
   val core = Seq(akkaActor, akkaHttp, akkaHttpXml, akkaStream, scalaXml) ++
              database ++ testing ++ logging
   val macros = Seq(scalaReflect, scalaXml)
-  val play = Seq(jdbc, cache) ++ database ++ logging
+  val play = Seq(jdbc, cache, webjarBootstrap) ++ database ++ logging
 }

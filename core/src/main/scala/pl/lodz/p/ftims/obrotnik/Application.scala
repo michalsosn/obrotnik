@@ -11,9 +11,6 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.io.StdIn
 
-/**
- *
- */
 object Application extends SimpleApplication
   with DatabaseSupportModuleImpl
   with SlickRepositories

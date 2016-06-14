@@ -11,7 +11,6 @@ import pl.lodz.p.ftims.obrotnik.stream.AkkaModule
  * Instantiates Akka and Database dependencies.
  */
 trait SimpleApplication extends AkkaModule with DatabaseModule {
-
   override implicit val actorSystem = ActorSystem("obrotnik-system")
   override implicit val executionContext = actorSystem.dispatcher
 
@@ -24,5 +23,5 @@ trait SimpleApplication extends AkkaModule with DatabaseModule {
     ActorMaterializerSettings(actorSystem).withSupervisionStrategy(loggingDecider)
   )
 
-  override implicit val database: Database = Database.forName("obrotnikdb")
+  override implicit val database: Database = Database.forConfig("obrotnikdb")
 }

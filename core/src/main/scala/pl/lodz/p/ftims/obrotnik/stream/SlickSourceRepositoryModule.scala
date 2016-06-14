@@ -11,10 +11,17 @@ trait SlickSourceRepositoryModule extends SourceRepositoryModule {
   lazy val sourceRepository: SourceRepository = new SlickSourceRepository
 
   class SlickSourceRepository extends SourceRepository {
-    override def findActive(): Future[Seq[Source]] = database.run(Sources.filter(_.active).result)
-    override def findActiveById(id: Id): Future[Option[Source]] =
+    def find(): Future[Seq[Source]] = database.run(Sources.result)
+    def findActive(): Future[Seq[Source]] = database.run(Sources.filter(_.active).result)
+    def findActiveById(id: Id): Future[Option[Source]] =
       database.run(Sources.filter(_.id === id).filter(_.active).result).map(_.headOption)
-    override def streamActive(): scaladsl.Source[Source, NotUsed] =
+    def streamActive(): scaladsl.Source[Source, NotUsed] =
       scaladsl.Source.fromPublisher(database.stream(Sources.filter(_.active).result))
+    def updateActive(id: Id, active: Boolean): Future[Int] =
+      database.run(Sources.filter(_.id === id).map(_.active).update(active))
+    def remove(id: Id): Future[Int] =
+      database.run(Sources.filter(_.id === id).delete)
+    def save(source: Source): Future[Int] =
+      database.run(Sources += source)
   }
 }
