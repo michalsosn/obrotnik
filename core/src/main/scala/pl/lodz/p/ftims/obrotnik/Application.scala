@@ -14,7 +14,7 @@ import scala.io.StdIn
 object Application extends SimpleApplication
   with DatabaseSupportModuleImpl
   with SlickRepositories
-  with AkkaFeedUpdateModule
+  with AkkaFeedUpdateServiceModule
   with AkkaHttpStreamModule
   with RssSupport {
   private val log: LoggingAdapter = Logging.getLogger(actorSystem, this)
@@ -30,7 +30,7 @@ object Application extends SimpleApplication
           Sources += stream.Source(new URI("https://nofluffjobs.com/rss"), active = true)
         )), 10.seconds
       )
-      Await.result(feedUpdate.updateAllFeeds(), 10.seconds)
+      feedUpdateService.startPeriodicUpdates()
       log.info("Press RETURN to stop...")
       StdIn.readLine()
     } finally {

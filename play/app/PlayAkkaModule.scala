@@ -4,6 +4,7 @@ import pl.lodz.p.ftims.obrotnik.stream.AkkaModule
 import play.api.ApplicationLoader.Context
 import play.api.BuiltInComponentsFromContext
 import play.api.db.{ConnectionPool, DBComponents, HikariCPConnectionPool}
+import play.api.http.HttpErrorHandler
 import play.api.i18n.{DefaultLangs, DefaultMessagesApi, I18nSupport, MessagesApi}
 import scala.concurrent.ExecutionContext
 
@@ -20,4 +21,6 @@ abstract class PlayAkkaModule(context: Context)
   override lazy val connectionPool: ConnectionPool = new HikariCPConnectionPool(environment)
   override lazy val messagesApi: MessagesApi =
     new DefaultMessagesApi(environment, configuration, new DefaultLangs(configuration))
+  override lazy val httpErrorHandler: HttpErrorHandler =
+    new ObrotnikErrorHandler(environment, configuration, sourceMapper, Some(router))
 }

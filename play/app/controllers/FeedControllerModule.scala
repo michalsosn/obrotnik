@@ -7,6 +7,8 @@ trait FeedControllerModule {
 }
 
 trait FeedController extends Controller {
-  def listFeed(): Action[AnyContent]
-  def refreshFeed(): Action[AnyContent]
+  def showSourceAsHtml(id: Int): Action[AnyContent]
+  def showSourceAsRss(id: Int): Action[AnyContent]
+  def showSinkAsHtml(id: Int): Action[AnyContent]
+  def showSinkAsRss(id: Int): Action[AnyContent]
 }

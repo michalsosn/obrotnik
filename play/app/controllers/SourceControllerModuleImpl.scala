@@ -1,13 +1,13 @@
 package controllers
 
 import pl.lodz.p.ftims.obrotnik.mapping.Id
-import pl.lodz.p.ftims.obrotnik.stream.{AkkaModule, SourceRepositoryModule}
+import pl.lodz.p.ftims.obrotnik.stream.{AkkaModule, FeedUpdateServiceModule, SourceRepositoryModule}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.Forms
 
 trait SourceControllerModuleImpl extends SourceControllerModule {
-  this: AkkaModule with I18nSupport with SourceRepositoryModule =>
+  this: AkkaModule with I18nSupport with SourceRepositoryModule with FeedUpdateServiceModule =>
   override lazy val sourceController: SourceController = new SourceControllerImpl
 
   class SourceControllerImpl extends SourceController {
@@ -19,7 +19,7 @@ trait SourceControllerModuleImpl extends SourceControllerModule {
       Forms.sourceForm.bindFromRequest.fold(
         errorForm => sourceRepository.find()
           .map(sources => BadRequest(views.html.inputs(sources, errorForm))),
-        source => sourceRepository.save(source)
+        source => feedUpdateService.saveAndUpdate(source)
           .map(_ => Redirect(routes.SourceController.list()))
       )
     }

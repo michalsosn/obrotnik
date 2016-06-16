@@ -1,78 +1,91 @@
+@import pl.lodz.p.ftims.obrotnik.mapping.Id
 @import pl.lodz.p.ftims.obrotnik.stream.Sink
+@import pl.lodz.p.ftims.obrotnik.stream.Source
 @import views.templates.MenuItems
 
 @import helper._
 @import views.templates.BootstrapHelpers._
 
-@(sinks: Seq[Sink], sinkForm: Form[Sink])(implicit messages: Messages)
+@(sources: Seq[Source], sinks: Seq[Sink], sinkForm: Form[(Sink, Seq[Id])])(implicit messages: Messages)
 
-@templates.bootstrap("OUTPUT feeds")(templates.defaultNav(Some(MenuItems.SINK_LIST))) {
-    <div class="container">
-        <article class="panel panel-default">
-            <header class="panel-heading panel-title">
-                Input feeds
-            </header>
-
-            <section class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="col-md-1 col-xs-1">#</th>
-                            <th class="col-md-7 col-xs-5">Name</th>
-                            <th class="col-md-2 col-xs-3">Active</th>
-                            <th class="col-md-2 col-xs-3">Operations</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @for((source, index) <- sinks.zipWithIndex) {
-                        <tr>
-                            <td>@(index + 1)</td>
-                            <td>
-                                @*<a href="@source.name">@source.name</a>*@
-                                @source.name
-                            </td>
-                            <td>
-                            @if(source.active) {
-                                @form(action = routes.SinkController.toggleActive(source.id.get.value, active = false)) {
-                                    <button type="submit" class="btn btn-success btn-sm">
-                                        <i class="fa fa-play"></i> Active
-                                    </button>
-                                }
-                            } else {
-                                @form(action = routes.SinkController.toggleActive(source.id.get.value, active = true)) {
-                                    <button type="submit" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-stop"></i> Inactive
-                                    </button>
-                                }
-                            }
-                            </td>
-                            <td>
-                            @form(action = routes.SinkController.remove(source.id.get.value)) {
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash-o"></i> Remove
-                                </button>
-                            }
-                            </td>
-                        </tr>
+@templates.bootstrap("Output feeds", styles = Array("assets/stylesheets/main.css"))(templates.defaultNav(Some(MenuItems.SINK_LIST))) {
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <article class="panel panel-default">
+                    <header class="panel-heading panel-title">
+                        Register output
+                    </header>
+                    <section class="panel-body">
+                    @form(action = routes.SinkController.add()) {
+                        @inputText(sinkForm("sink.title"), 'class -> "form-control", '_label -> "Title")
+                        @textarea(sinkForm("sink.description"), 'class -> "form-control", '_label -> "Description")
+                        @inputText(sinkForm("sink.filter"), 'class -> "form-control", '_label -> "Search")
+                        @checkbox(sinkForm("sink.active"), 'class -> "checkbox", '_label -> "Active")
+                        @select(sinkForm("sources"),
+                            sources.map(source => source.id.get.value.toString -> source.uri.toString),
+                            '_label  -> "Sources", 'multiple  -> "multiple")
+                        <button type="submit" class="btn btn-block btn-success">
+                            <i class="fa fa-plus"></i> Add
+                        </button>
                     }
-                    </tbody>
-                </table>
-            </section>
-            <section class="panel-body">
-            @form(action = routes.SinkController.add(), 'class -> "form-inline") {
-                <div class="form-group">
-                @inputText(sinkForm("name"), 'class -> "form-control", '_label -> "Name")
-                </div>
-                <div class="checkbox">
-                    <label>
-                    @checkbox(sinkForm("active"), 'class -> "form-control", '_label -> "Active")
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-success">
-                    <i class="fa fa-plus"></i> Add
-                </button>
-            }
-            </section>
-        </article>
+                    </section>
+                </article>
+            </div>
+            <div class="col-md-9">
+                <article class="panel panel-default">
+                    <header class="panel-heading panel-title">
+                        Output feeds
+                    </header>
+                    <section class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1 col-xs-1">#</th>
+                                    <th class="col-md-6 col-xs-5">Title</th>
+                                    <th class="col-md-5 col-xs-6">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @for((sink, index) <- sinks.zipWithIndex) {
+                                <tr>
+                                    <td>@(index + 1)</td>
+                                    <td>@sink.title</td>
+                                    <td class="inline-actions">
+                                        <a href="@routes.FeedController.showSinkAsHtml(sink.id.get.value)"
+                                        class="btn btn-info btn-sm">
+                                            <i class="fa fa-eye"></i> Read
+                                        </a>
+                                        <a href="@routes.FeedController.showSinkAsRss(sink.id.get.value)"
+                                        class="btn btn-info btn-sm">
+                                            <i class="fa fa-rss"></i> Rss
+                                        </a>
+                                        @if(sink.active) {
+                                            @form(action = routes.SinkController.toggleActive(sink.id.get.value, active = false)) {
+                                                <button type="submit" class="btn btn-success btn-sm">
+                                                    <i class="fa fa-play"></i> Active
+                                                </button>
+                                            }
+                                        } else {
+                                            @form(action = routes.SinkController.toggleActive(sink.id.get.value, active = true)) {
+                                                <button type="submit" class="btn btn-warning btn-sm">
+                                                    <i class="fa fa-stop"></i> Inactive
+                                                </button>
+                                            }
+                                        }
+                                        @form(action = routes.SinkController.remove(sink.id.get.value)) {
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fa fa-trash-o"></i> Remove
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </section>
+                </article>
+            </div>
+        </div>
     </div>
 }

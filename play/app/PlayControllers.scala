@@ -1,6 +1,6 @@
 import controllers._
-import pl.lodz.p.ftims.obrotnik.feed.rss.RssRepositoryModule
-import pl.lodz.p.ftims.obrotnik.stream.{AkkaModule, SinkRepositoryModule, SourceRepositoryModule}
+import pl.lodz.p.ftims.obrotnik.feed.rss.{RssRepositoryModule, RssSupport}
+import pl.lodz.p.ftims.obrotnik.stream._
 import play.api.i18n.I18nSupport
 
 trait PlayControllers extends HomeControllerModuleImpl
@@ -8,5 +8,6 @@ trait PlayControllers extends HomeControllerModuleImpl
   with SinkControllerModuleImpl
   with FeedControllerModuleImpl {
   this: AkkaModule with I18nSupport
-    with SourceRepositoryModule with SinkRepositoryModule with RssRepositoryModule =>
+    with SourceRepositoryModule with SinkRepositoryModule with RssRepositoryModule
+    with FeedUpdateServiceModule with FeedCreationServiceModule with RssSupport =>
 }

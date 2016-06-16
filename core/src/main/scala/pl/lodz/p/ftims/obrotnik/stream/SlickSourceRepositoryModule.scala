@@ -2,8 +2,8 @@ package pl.lodz.p.ftims.obrotnik.stream
 
 import akka.NotUsed
 import akka.stream.scaladsl
-import pl.lodz.p.ftims.obrotnik.mapping.{DatabaseModule, Id}
 import pl.lodz.p.ftims.obrotnik.mapping.ExtendedPostgresDriver.api._
+import pl.lodz.p.ftims.obrotnik.mapping.{DatabaseModule, Id}
 import scala.concurrent.Future
 
 trait SlickSourceRepositoryModule extends SourceRepositoryModule {
@@ -21,7 +21,7 @@ trait SlickSourceRepositoryModule extends SourceRepositoryModule {
       database.run(Sources.filter(_.id === id).map(_.active).update(active))
     def remove(id: Id): Future[Int] =
       database.run(Sources.filter(_.id === id).delete)
-    def save(source: Source): Future[Int] =
-      database.run(Sources += source)
+    def save(source: Source): Future[Id] =
+      database.run((Sources returning Sources.map(_.id)) += source)
   }
 }

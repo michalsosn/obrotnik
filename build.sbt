@@ -26,7 +26,8 @@ lazy val core = (project in file("core"))
 lazy val play = (project in file("play"))
   .settings(commonSettings: _*)
   .settings(
-    libraryDependencies ++= Dependencies.play
+    libraryDependencies ++= Dependencies.play,
+    includeFilter in (Assets, LessKeys.less) := "*.less"
   )
   .enablePlugins(PlayScala)
   .dependsOn(core)
