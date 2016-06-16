@@ -23,21 +23,18 @@ trait FeedControllerModuleImpl extends FeedControllerModule {
     }
 
     def showSinkAsHtml(id: Int): Action[AnyContent] = Action.async { implicit request =>
-      feedCreationService.getFromSink(Id(id))(makeURIToHtml)
+      feedCreationService.getFromSink(Id(id))(makeURI)
         .map(rss => Ok(views.html.feed(rss)))
     }
 
     def showSinkAsRss(id: Int): Action[AnyContent] = Action.async { implicit request =>
-      feedCreationService.getFromSink(Id(id))(makeURIToRss).map(convertToRss)
+      feedCreationService.getFromSink(Id(id))(makeURI).map(convertToRss)
     }
 
     private def convertToRss(rss: Rss)(implicit converter: XmlConverter[Rss]): Result =
-      Ok(converter.toXml(rss, "rss version=\"2.0\"")).as("application/rss+xml")
+      Ok(converter.toXml(rss, "rss")).as("application/rss+xml")
 
-    private def makeURIToHtml(id: Id)(implicit request: RequestHeader): URI =
-      new URI(routes.FeedController.showSinkAsHtml(id.value).absoluteURL())
-
-    private def makeURIToRss(id: Id)(implicit request: RequestHeader): URI =
+    private def makeURI(id: Id)(implicit request: RequestHeader): URI =
       new URI(routes.FeedController.showSinkAsRss(id.value).absoluteURL())
   }
 }
