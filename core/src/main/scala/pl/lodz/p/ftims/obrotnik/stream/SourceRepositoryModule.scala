@@ -15,6 +15,6 @@ trait SourceRepositoryModule {
     def streamActive(): scaladsl.Source[Source, NotUsed]
     def updateActive(id: Id, active: Boolean): Future[Int]
     def remove(id: Id): Future[Int]
-    def save(source: Source): Future[Int]
+    def save(source: Source): Future[Id]
   }
 }

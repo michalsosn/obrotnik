@@ -8,5 +8,7 @@ trait RssRepositoryModule {
 
   trait RssRepository {
     def replaceBySourceId(rss: Rss, sourceId: Id): Future[Unit]
+    def findItemsBySinkId(sinkId: Id): Future[Seq[Item]]
+    def findChannelBySourceId(sourceId: Id): Future[Channel]
   }
 }

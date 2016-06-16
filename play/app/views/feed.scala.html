@@ -1,0 +1,195 @@
+@import pl.lodz.p.ftims.obrotnik.feed.rss.Rss
+@import views.templates.MenuItems
+
+@(rss: Rss)
+
+@templates.bootstrap("Feed")(templates.defaultNav(None)) {
+    <div class="container" xmlns="http://www.w3.org/1999/html">
+    <article class="panel panel-primary">
+        <header class="panel-heading panel-title">
+            Channel description
+        </header>
+        <section class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-md-3 col-xs-4">Element</th>
+                        <th class="col-md-9 col-xs-8">Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @defining(rss.channel) { channel =>
+                    <tr>
+                        <td>Title</td>
+                        <td>@channel.title</td>
+                    </tr>
+                    <tr>
+                        <td>Link</td>
+                        <td><a href="@channel.link">@channel.link</a></td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>@channel.description</td>
+                    </tr>
+                @if(channel.language.isDefined) {
+                    <tr>
+                        <td>Language</td>
+                        <td>@channel.language</td>
+                    </tr>
+                }
+                @if(channel.copyright.isDefined) {
+                    <tr>
+                        <td>Copyright</td>
+                        <td>@channel.copyright</td>
+                    </tr>
+                }
+                @if(channel.managingEditor.isDefined) {
+                    <tr>
+                        <td>Managing editor</td>
+                        <td>@channel.managingEditor</td>
+                    </tr>
+                }
+                @if(channel.webMaster.isDefined) {
+                    <tr>
+                        <td>Web master</td>
+                        <td>@channel.webMaster</td>
+                    </tr>
+                }
+                @if(channel.pubDate.isDefined) {
+                    <tr>
+                        <td>Publication date</td>
+                        <td>@channel.pubDate</td>
+                    </tr>
+                }
+                @if(channel.lastBuildDate.isDefined) {
+                    <tr>
+                        <td>Last build date</td>
+                        <td>@channel.lastBuildDate</td>
+                    </tr>
+                }
+                @if(channel.docs.isDefined) {
+                    <tr>
+                        <td>Docs</td>
+                        <td>@channel.docs</td>
+                    </tr>
+                }
+                @if(channel.ttl.isDefined) {
+                    <tr>
+                        <td>Time to live</td>
+                        <td>@channel.ttl</td>
+                    </tr>
+                }
+                @if(channel.image.isDefined) {
+                    @defining(channel.image.get) { image =>
+                        <tr>
+                            <td>Image</td>
+                            <td>
+                                <figure>
+                                    <a href="@image.link">
+                                        <img src="@image.url" alt="@image.title" height="@image.height" width="@image.width"/>
+                                        @if(image.description.isDefined) {
+                                            <figcaption>
+                                            @image.description
+                                            </figcaption>
+                                        }
+                                    </a>
+                                </figure>
+                            </td>
+                        </tr>
+                    }
+                }
+                @if(channel.skipDays.isDefined) {
+                    <tr>
+                        <td>Skip days</td>
+                        <td>@channel.skipDays.map(_.day.mkString(", "))</td>
+                    </tr>
+                }
+                @if(channel.skipHours.isDefined) {
+                    <tr>
+                        <td>Skip hours</td>
+                        <td>@channel.skipHours.map(_.hour.mkString(", "))</td>
+                    </tr>
+                }
+                @if(channel.category.nonEmpty) {
+                    <tr>
+                        <td>Categories</td>
+                        <td>@channel.category.mkString(", ")</td>
+                    </tr>
+                }
+                }
+                </tbody>
+            </table>
+        </section>
+    </article>
+    @for((item, index) <- rss.channel.item.zipWithIndex) {
+        <article class="panel panel-default">
+            <header class="panel-heading panel-title" id="item-@index">
+                <a href="#item-@index">
+                @item.title.getOrElse("Item " + index)
+                </a>
+            </header>
+
+            <section class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3 col-xs-4">Element</th>
+                            <th class="col-md-9 col-xs-8">Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @if(item.pubDate.isDefined) {
+                        <tr>
+                            <td>Publication date</td>
+                            <td>@item.pubDate</td>
+                        </tr>
+                    }
+                    @if(item.guid.isDefined) {
+                        <tr>
+                            <td>Guid</td>
+                            <td>@item.guid</td>
+                        </tr>
+                    }
+                    @if(item.author.isDefined) {
+                        <tr>
+                            <td>Author</td>
+                            <td>@item.author</td>
+                        </tr>
+                    }
+                    @if(item.link.isDefined) {
+                        <tr>
+                            <td>Link</td>
+                            <td><a href="@item.link">@item.link</a></td>
+                        </tr>
+                    }
+                    @if(item.category.nonEmpty) {
+                        <tr>
+                            <td>Categories</td>
+                            <td>@item.category.mkString(", ")</td>
+                        </tr>
+                    }
+                    @if(item.source.isDefined) {
+                        <tr>
+                            <td>Source Feed</td>
+                            <td>@item.source</td>
+                        </tr>
+                    }
+                    @if(item.description.isDefined) {
+                        <tr>
+                            <td>Description</td>
+                            <td>@item.description</td>
+                        </tr>
+                    }
+                    @if(item.comments.isDefined) {
+                        <tr>
+                            <td>Comments</td>
+                            <td><a href="@item.comments">@item.comments</a></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </section>
+        </article>
+    }
+    </div>
+}

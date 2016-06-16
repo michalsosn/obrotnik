@@ -1,0 +1,10 @@
+include "/application.conf"
+
+# to use add -Dconfig.file="development.conf" to jvm parameters
+db.default {
+  driver = org.postgresql.Driver
+  url = "jdbc:postgresql://localhost:5432/obrotnikdb"
+  username = "username"
+  password = "password"
+  #logSql = true
+}

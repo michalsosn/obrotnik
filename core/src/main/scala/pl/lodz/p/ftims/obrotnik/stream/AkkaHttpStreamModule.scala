@@ -27,18 +27,20 @@ trait AkkaHttpStreamModule extends HttpStreamModule {
     override def sendRequest: Flow[URI, HttpResponse, NotUsed] =
       Flow[URI].flatMapConcat { uri =>
         def getPort(default: Int) = if (uri.getPort == -1) default else uri.getPort
+
         val connection: Flow[HttpRequest, HttpResponse, Future[OutgoingConnection]] =
-          if (uri.getScheme == "https") {
-            Http().outgoingConnectionHttps(uri.getHost, getPort(443))
-          } else {
-            Http().outgoingConnection(uri.getHost, getPort(80))
+          uri.getScheme match {
+            case "https" =>
+              Http().outgoingConnectionHttps(uri.getHost, getPort(443))
+            case "http" =>
+              Http().outgoingConnection(uri.getHost, getPort(80))
           }
 
         log.info("Sending a request to {}", uri)
         dsl.Source.single(HttpRequest(uri = uri.getPath)).via(connection)
       }
 
-    override def unmarshal[T: FromResponseUnmarshaller]: Flow[HttpResponse, Try[T], NotUsed] =
+    override def unmarshal[T : FromResponseUnmarshaller]: Flow[HttpResponse, Try[T], NotUsed] =
       Flow[HttpResponse].mapAsync(1) { response =>
         Unmarshal(response).to[T].map(Success.apply).recoverWith {
           case ex =>

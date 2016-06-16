@@ -17,12 +17,17 @@ object Forms {
     )(Source.apply)(Source.unapply)
   )
 
-  def sinkForm: Form[Sink] = Form(
+  def sinkForm: Form[(Sink, Seq[Id])] = Form(
     mapping(
-      "name" -> nonEmptyText,
-      "active" -> boolean,
-      "id" -> optional(id)
-    )(Sink.apply)(Sink.unapply)
+      "sink" -> mapping(
+        "title" -> nonEmptyText,
+        "description" -> nonEmptyText,
+        "filter" -> optional(nonEmptyText),
+        "active" -> boolean,
+        "id" -> optional(id)
+      )(Sink.apply)(Sink.unapply),
+      "sources" -> seq(id)
+    )(Tuple2.apply)(Tuple2.unapply)
   )
 
   private def id: Mapping[Id] = number.transform(Id.apply, _.value)

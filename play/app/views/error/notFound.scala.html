@@ -1,0 +1,11 @@
+@(header: RequestHeader, nsee: NoSuchElementException)
+
+@templates.bootstrap("Not found")(templates.defaultNav(None)) {
+    <div class="container">
+        <article class="jumbotron">
+            <p class="lead">
+                The resource could not be found.
+            </p>
+        </article>
+    </div>
+}

@@ -78,32 +78,6 @@ object ChannelMapping {
       Some(id, sourceId, Channel(title, link, description, language, copyright, managingEditor,
         webMaster, pubDate, lastBuildDate, docs, ttl, None, skipHours, skipDays, categories))
   }
-
-  def deleteBySourceId(sourceId: Id): DBIOAction[Int, NoStream, Effect.Write] =
-    Channels.filter(_.sourceId === sourceId).delete
-
-  def allBySourceId(sourceId: Id): Query[(ChannelMapping, ImageMapping),
-    (ChannelMapping.Fields, ImageMapping.Fields), Seq] =
-    for {
-      channel <- Channels if channel.sourceId === sourceId
-      image <- Images if image.channelId === channel.id
-    } yield (channel, image)
-
-  def insertAll(sourceId: Id, channel: Channel)(
-    implicit executionContext: ExecutionContext
-  ): DBIOAction[Id, NoStream, Effect.Write] = {
-    val action = for {
-        channelId <- (Channels returning Channels.map(_.id)) += ChannelMapping(channel, sourceId)
-        _ <- Items ++= channel.item.map(ItemMapping.apply(_, channelId))
-      } yield channelId
-    channel.image.fold(action) { image =>
-      for {
-        channelId <- action
-        _ <- Images += ImageMapping(image, channelId)
-      } yield channelId
-    }
-  }
-
 }
 
 object Channels extends TableQuery(new ChannelMapping(_))

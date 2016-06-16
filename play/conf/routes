@@ -2,11 +2,15 @@ GET     /                           controllers.HomeController.index()
 
 GET     /inputs                     controllers.SourceController.list()
 POST    /inputs                     controllers.SourceController.add()
+GET     /inputs/:id                 controllers.FeedController.showSourceAsHtml(id: Int)
+GET     /inputs/:id/rss             controllers.FeedController.showSourceAsRss(id: Int)
 POST    /inputs/:id/remove          controllers.SourceController.remove(id: Int)
 POST    /inputs/:id/activate        controllers.SourceController.toggleActive(id: Int, active: Boolean)
 
 GET     /outputs                    controllers.SinkController.list()
 POST    /outputs                    controllers.SinkController.add()
+GET     /outputs/:id                controllers.FeedController.showSinkAsHtml(id: Int)
+GET     /outputs/:id/rss            controllers.FeedController.showSinkAsRss(id: Int)
 POST    /outputs/:id/remove         controllers.SinkController.remove(id: Int)
 POST    /outputs/:id/activate       controllers.SinkController.toggleActive(id: Int, active: Boolean)
 
