@@ -1,6 +1,18 @@
 include "/application.conf"
 
 # to use add -Dconfig.file="development.conf" to jvm parameters
+obrotnikdb = {
+  dataSourceClass = "org.postgresql.ds.PGSimpleDataSource"
+  properties = {
+    databaseName = "obrotnikdb"
+    user = "username"
+    password = "password"
+    portNumber = 5432
+    serverName = "localhost"
+  }
+  numThreads = 8
+}
+
 db.default {
   driver = org.postgresql.Driver
   url = "jdbc:postgresql://localhost:5432/obrotnikdb"
