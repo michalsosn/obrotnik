@@ -8,6 +8,7 @@ import pl.lodz.p.ftims.obrotnik.macros.XmlConverter
 import pl.lodz.p.ftims.obrotnik.mapping.Id
 import pl.lodz.p.ftims.obrotnik.stream.{AkkaModule, FeedCreationServiceModule}
 import play.api.mvc._
+import scala.xml.{Attribute, Elem, Null, Text}
 
 trait FeedControllerModuleImpl extends FeedControllerModule {
   this: AkkaModule with FeedCreationServiceModule with XmlConverterSupport =>
@@ -31,8 +32,13 @@ trait FeedControllerModuleImpl extends FeedControllerModule {
       feedCreationService.getFromSink(Id(id))(makeURI).map(convertToRss)
     }
 
-    private def convertToRss(rss: Rss)(implicit converter: XmlConverter[Rss]): Result =
-      Ok(converter.toXml(rss, "rss")).as("application/rss+xml")
+    private def convertToRss(rss: Rss)(implicit converter: XmlConverter[Rss]): Result = {
+      val result = converter.toXml(rss, "rss") match {
+        case elem: Elem => elem % Attribute(None, "version", Text("2.0"), Null)
+        case other => other
+      }
+      Ok(result).as("application/rss+xml")
+    }
 
     private def makeURI(id: Id)(implicit request: RequestHeader): URI =
       new URI(routes.FeedController.showSinkAsRss(id.value).absoluteURL())
